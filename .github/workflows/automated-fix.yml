@@ -1,0 +1,36 @@
+name: Run automated fix
+
+on:
+  workflow_call:
+    inputs:
+      repository:
+        description: The repository to run this action on, prevent actions from running on forks unless intended.
+        required: true
+        type: string
+      script:
+        description: The script to fix code
+        default: |
+          yarn
+          yarn fix || true
+        type: string
+
+jobs:
+  fix:
+    if: github.repository == inputs.repository
+    name: Run automated fix
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+
+      - name: Run fix script
+        run: ${{ inputs.script }}
+
+      - name: Apply automated fix
+        uses: autofix-ci/action@v1
+        with:
+          commit-message: "Apply automated changes"
+          fail-fast: false
