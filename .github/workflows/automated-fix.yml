@@ -33,4 +33,3 @@ jobs:
         uses: autofix-ci/action@v1
         with:
           commit-message: "Apply automated changes"
-          fail-fast: false
